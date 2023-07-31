@@ -1,6 +1,6 @@
-# C++ Schedule Manager
+# PHP Native Practice
 
-Simple schedule manager with multi role admin and user
+Make simple php native framework
 
 ## Run Locally  
 
@@ -15,6 +15,8 @@ Go to the project directory
 ~~~bash  
   cd php-native-practice
 ~~~
+
+Make database and import db_native.sql and setup main.php in config
 
 Start the project
 
