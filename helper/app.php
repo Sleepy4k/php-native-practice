@@ -1,5 +1,5 @@
 <?php
-  include_once '../core/config.php';
+  include_once './core/Config.php';
 
   function AppName() {
     return Config::get('app/name');

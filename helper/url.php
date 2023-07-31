@@ -6,8 +6,6 @@
       $protocol = 'http';
     }
 
-    $app_name = explode('/', $_SERVER['REQUEST_URI'])[1];
-
-    return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/" . $app_name;
+    return $protocol . "://" . $_SERVER['HTTP_HOST'] . "/";
   }
 ?>
