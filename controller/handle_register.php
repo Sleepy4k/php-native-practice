@@ -1,7 +1,8 @@
 <?php
 	session_start();
-  include '../helper/url.php';
-  include '../helper/connection.php';
+  include_once '../core/redirect.php';
+  include_once '../core/password.php';
+  include_once '../helper/connection.php';
 
 	$user	= $_POST['username'];
 	$pass	= $_POST['password'];
@@ -9,7 +10,7 @@
 	
   if ($pass != $pass_confirm) {
     $_SESSION['msg'] = 2;
-    header('Location: ' . get_base_url() . '/view/register.php');
+    Redirect::to('../view/register.php');
     exit;
   }
 
@@ -17,11 +18,12 @@
 
   if ($check_if_exist->num_rows > 0) {
     $_SESSION['msg'] = 3;
-    header('Location: ' . get_base_url() . '/view/register.php');
+    Redirect::to('../view/register.php');
     exit;
   }
 
-  $query_register = $conn->query("insert into user (username, password, role) values ('".$user."', '".$pass."', 'user')");
+  $hashed_pass = Password::hash($pass);
+  $query_register = $conn->query("insert into user (username, password, role) values ('".$user."', '".$hashed_pass."', 'user')");
 
-  header('Location: ' . get_base_url() . '/view/login.php');
+  Redirect::to('../view/login.php');
 ?>
