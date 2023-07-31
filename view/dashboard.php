@@ -1,28 +1,3 @@
-<?php 
-	session_start();
-  include '../helper/app.php';
-  include '../helper/url.php';
-  include '../helper/connection.php';
-
-  if (!isset($_SESSION['auth'])) {
-    header('Location: ' . get_base_url() . '/view/login.php');
-    exit;
-  }
-
-  $css_path = get_base_url() . "/public/css/dashboard.css";
-  $logout_controller = get_base_url() . "/controller/handle_logout.php";
-
-  $users_query = $conn->query("select * from user");
-
-  if ($users_query->num_rows > 0) {
-    while ($row = $users_query->fetch_assoc()) {
-      $users[] = $row;
-    }
-  } else {
-    $users = [];
-  }
-?>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -30,10 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><?php echo AppName() ?> | Dashboard</title>
+    <title><?php echo $title ?></title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <link rel="stylesheet" href="<?php echo $css_path ?>">
+    <link rel="stylesheet" href="<?php echo get_base_url() . "public/css/dashboard.css" ?>">
   </head>
   <body>
     <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
@@ -77,10 +52,12 @@
               <hr class="my-3">
               <ul class="nav flex-column mb-auto">
                 <li class="nav-item">
-                  <a class="nav-link d-flex align-items-center gap-2" href="<?php echo $logout_controller ?>">
-                    <svg class="bi"><use xlink:href="#door-closed"/></svg>
-                    Sign out
-                  </a>
+                  <form action="<?php echo get_base_url() . "logout" ?>" method="post">
+                    <button class="nav-link d-flex align-items-center gap-2" type="submit">
+                      <svg class="bi"><use xlink:href="#door-closed"/></svg>
+                      Sign out
+                    </button>
+                  </form>
                 </li>
               </ul>
             </div>
@@ -105,7 +82,7 @@
                 <?php
                   foreach ($users as $key => $value) {
                     echo '<tr>';
-                    echo '<td>' . $key + 1 . '</td>';
+                    echo '<td>' . $value['id'] . '</td>';
                     echo '<td>' . $value['username'] . '</td>';
                     echo '<td>' . $value['role'] . '</td>';
                     echo '</tr>';
