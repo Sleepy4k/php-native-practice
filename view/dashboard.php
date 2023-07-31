@@ -1,5 +1,6 @@
 <?php 
 	session_start();
+  include '../helper/app.php';
   include '../helper/url.php';
   include '../helper/connection.php';
 
@@ -29,7 +30,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>PHP Native Practice | Login</title>
+    <title><?php echo AppName() ?> | Dashboard</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="<?php echo $css_path ?>">
