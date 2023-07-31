@@ -1,21 +1,22 @@
 <?php
-include_once '../config/app.php';
+  include_once './config/main.php';
 
-class Config {
-  public static function get($path = null) {
-    if ($path) {
-      $config = $GLOBALS['APP_NAME'];
-      $path = explode('/', $path);
+  class Config {
+    public static function get($path = null) {
+      if ($path) {
+        $config = $GLOBALS['APP_NAME'];
+        $path = explode('/', $path);
 
-      foreach ($path as $bit) {
-        if (isset($config[$bit])) {
-          $config = $config[$bit];
+        foreach ($path as $bit) {
+          if (isset($config[$bit])) {
+            $config = $config[$bit];
+          }
         }
+
+        return $config;
       }
 
-      return $config;
+      return false;
     }
-
-    return false;
   }
-}
+?>
