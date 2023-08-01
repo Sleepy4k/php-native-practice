@@ -1,11 +1,22 @@
 <?php
-  include_once './core/Config.php';
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-  function AppName() {
-    return Config::get('app/name');
-  }
+include_once BASEPATH . './core/Config.php';
 
-  function AppVersion() {
-    return Config::get('app/version');
-  }
-?>
+/*
+* Get the app name
+*
+* @return string
+*/
+function AppName() {
+  return Config::get('app/name');
+}
+
+/*
+* Get the app version
+*
+* @return string
+*/
+function AppVersion() {
+  return Config::get('app/version');
+}
