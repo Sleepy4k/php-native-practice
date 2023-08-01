@@ -1,17 +1,33 @@
 <?php
-  include_once 'Config.php';
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-  class Password {
-    public static function hash($password) {
-      return password_hash($password, Config::get('password/algo'),
-        array(
-          'cost' => Config::get('password/cost')
-        )
-      );
-    }
+include_once BASEPATH . './core/Config.php';
 
-    public static function check($password, $hash){
-      return password_verify($password, $hash);
-    }
+class Password {
+  /*
+  * Hash a password
+  *
+  * @param string $password
+  *
+  * @return string
+  */
+  public static function make(string $password) {
+    return password_hash($password, Config::get('password/algo'),
+      array(
+        'cost' => Config::get('password/cost')
+      )
+    );
   }
-?>
+
+  /*
+  * Check a password
+  *
+  * @param string $password
+  * @param string $hash
+  *
+  * @return bool
+  */
+  public static function verify(string $password, string $hash){
+    return password_verify($password, $hash);
+  }
+}

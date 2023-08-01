@@ -1,22 +1,30 @@
 <?php
-  include_once './config/main.php';
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-  class Config {
-    public static function get($path = null) {
-      if ($path) {
-        $config = $GLOBALS['APP_NAME'];
-        $path = explode('/', $path);
+include_once BASEPATH . './config/main.php';
 
-        foreach ($path as $bit) {
-          if (isset($config[$bit])) {
-            $config = $config[$bit];
-          }
+class Config {
+  /*
+  * Get a config value
+  *
+  * @param string $path
+  *
+  * @return mixed
+  */
+  public static function get(string $path = '') {
+    if ($path) {
+      $config = $GLOBALS['APP_CONFIG'];
+      $path = explode('/', $path);
+
+      foreach ($path as $bit) {
+        if (isset($config[$bit])) {
+          $config = $config[$bit];
         }
-
-        return $config;
       }
 
-      return false;
+      return $config;
     }
+
+    return false;
   }
-?>
+}

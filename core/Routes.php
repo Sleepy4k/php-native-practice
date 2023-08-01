@@ -1,69 +1,181 @@
 <?php
-  include_once './helper/Url.php';
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-  class Route {
-    public static $validRoutes = array();
+include_once BASEPATH . './helper/Url.php';
 
-    private static function handle_func($function) {
-      if (is_callable($function)) {
-        call_user_func($function);
-      } elseif (is_array($function) && count($function) == 2) {
-        [$className, $methodName] = $function;
-        $classInstance = new $className();
+class Route {
+  // Define type of route
+  public static $typeRoute;
 
-        if (method_exists($classInstance, $methodName)) {
-          $classInstance->$methodName();
-        } else {
-          echo "Method not found!";
-        }
+  // Define valid routes
+  public static $validRoutes = [];
+
+  /*
+  * Constructor
+  *
+  * @param string $type
+  */
+  public function __construct($type = "web") {
+    self::$typeRoute = $type;
+    self::$validRoutes = [
+      "web" => [],
+      "api" => []
+    ];
+  }
+
+  /*
+  * Handle function for route
+  *
+  * @param mixed $function
+  *
+  * @return void
+  */
+  private static function handle_func($function) {
+    if (is_callable($function)) {
+      call_user_func($function);
+    } elseif (is_array($function) && count($function) == 2) {
+      [$className, $methodName] = $function;
+      $classInstance = new $className();
+
+      if (method_exists($classInstance, $methodName)) {
+        $classInstance->$methodName();
       } else {
-        echo "Invalid handler!";
+        if (self::$typeRoute == "web") {
+          self::redirect('fallback');
+        } else {
+          echo json_encode([
+            "status" => 404,
+            "message" => "Not Found"
+          ]);
+        }
+      }
+    } else {
+      if (self::$typeRoute == "web") {
+        self::redirect('fallback');
+      } else {
+        echo json_encode([
+          "status" => 404,
+          "message" => "Not Found"
+        ]);
       }
     }
+  }
 
-    public static function any($route, $function) {
-      self::$validRoutes[] = $route;
-
-      if ($_SERVER['REQUEST_URI'] == $route) {
-        self::handle_func($function);
-      }
+  /*
+  * Set route with any method
+  *
+  * @param string $route
+  * @param mixed $params
+  *
+  * @return void
+  */
+  public static function any(string $route, $function) {
+    if (self::$typeRoute == "web") {
+      self::$validRoutes["web"][] = $route;
+    } else {
+      self::$validRoutes["api"][] = "/api" . $route;
     }
 
-    public static function get($route, $function) {
-      self::$validRoutes[] = $route;
+    if ($_SERVER['REQUEST_URI'] == $route) {
+      self::handle_func($function);
+    }
+  }
 
-      if ($_SERVER['REQUEST_URI'] == $route && $_SERVER['REQUEST_METHOD'] == 'GET') {
-        self::handle_func($function);
-      }
+  /*
+  * Set route with GET method
+  *
+  * @param string $route
+  * @param mixed $params
+  *
+  * @return void
+  */
+  public static function get(string $route, $function) {
+    if (self::$typeRoute == "web") {
+      self::$validRoutes["web"][] = $route;
+    } else if (self::$typeRoute == "api") {
+      $route = "/api" . $route;
+
+      self::$validRoutes["api"][] = $route;
     }
 
-    public static function post($route, $function) {
-      self::$validRoutes[] = $route;
-
-      if ($_SERVER['REQUEST_URI'] == $route && $_SERVER['REQUEST_METHOD'] == 'POST') {
-        self::handle_func($function);
-      }
-    }
-
-    public static function put($route, $function) {
-      self::$validRoutes[] = $route;
-
-      if ($_SERVER['REQUEST_URI'] == $route && $_SERVER['REQUEST_METHOD'] == 'PUT') {
-        self::handle_func($function);
-      }
-    }
-
-    public static function delete($route, $function) {
-      self::$validRoutes[] = $route;
-
-      if ($_SERVER['REQUEST_URI'] == $route && $_SERVER['REQUEST_METHOD'] == 'DELETE') {
-        self::handle_func($function);
-      }
-    }
-
-    public static function redirect($location) {
-      header('Location: ' . get_base_url() . $location);
+    if ($_SERVER['REQUEST_URI'] == $route && $_SERVER['REQUEST_METHOD'] == 'GET') {
+      self::handle_func($function);
       exit();
     }
   }
-?>
+
+  /*
+  * Set route with POST method
+  *
+  * @param string $route
+  * @param mixed $params
+  *
+  * @return void
+  */
+  public static function post(string $route, $function) {
+    if (self::$typeRoute == "web") {
+      self::$validRoutes["web"][] = $route;
+    } else {
+      self::$validRoutes["api"][] = "/api" . $route;
+    }
+
+    if ($_SERVER['REQUEST_URI'] == $route && $_SERVER['REQUEST_METHOD'] == 'POST') {
+      self::handle_func($function);
+      exit();
+    }
+  }
+
+  /*
+  * Set route with PUT method
+  *
+  * @param string $route
+  * @param mixed $params
+  *
+  * @return void
+  */
+  public static function put(string $route, $function) {
+    if (self::$typeRoute == "web") {
+      self::$validRoutes["web"][] = $route;
+    } else {
+      self::$validRoutes["api"][] = "/api" . $route;
+    }
+
+    if ($_SERVER['REQUEST_URI'] == $route && $_SERVER['REQUEST_METHOD'] == 'PUT') {
+      self::handle_func($function);
+      exit();
+    }
+  }
+
+  /*
+  * Set route with DELETE method
+  *
+  * @param string $route
+  * @param mixed $params
+  *
+  * @return void
+  */
+  public static function delete(string $route, $function) {
+    if (self::$typeRoute == "web") {
+      self::$validRoutes["web"][] = $route;
+    } else {
+      self::$validRoutes["api"][] = "/api" . $route;
+    }
+
+    if ($_SERVER['REQUEST_URI'] == $route && $_SERVER['REQUEST_METHOD'] == 'DELETE') {
+      self::handle_func($function);
+      exit();
+    }
+  }
+
+  /*
+  * Redirect to specific location
+  *
+  * @param string $location
+  *
+  * @return void
+  */
+  public static function redirect(string $location) {
+    header('Location: ' . get_base_url() . $location);
+    exit();
+  }
+}

@@ -1,18 +1,48 @@
 <?php
-  class View {
-    public $view;
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-    public function __construct($view) {
-      $this->view = $view;
-    }
+class View {
+  // The name of the view file to be rendered
+  public $view;
 
-    public function render($data = []) {
-      if (file_exists('./view/' . $this->view . '.php')) {
-        extract($data);
-        include('./view/' . $this->view . '.php');
-      } else {
-        include_once './view/404.php';
-      }
+  /*
+  * Constructor
+
+  * @param string $view
+  */
+  public function __construct(string $view) {
+    $this->view = $view;
+  }
+
+  /*
+  * Destructor
+  */
+  public function __destruct() {
+    $this->view = null;
+  }
+
+  /*
+  * Render the view file
+  *
+  * @param array $data
+  */
+  public function render(array $data = []) {
+    if (file_exists('./view/' . $this->view . '.view.php')) {
+      extract($data);
+      include('./view/' . $this->view . '.view.php');
     }
   }
-?>
+
+  /*
+  * Render a partial view file
+  *
+  * @param string $view
+  * @param array $data
+  */
+  public function render_partial(string $view, array $data = []) {
+    if (file_exists('./view/' . $view . '.view.php')) {
+      extract($data);
+      include('./view/' . $view . '.view.php');
+    }
+  }
+}
