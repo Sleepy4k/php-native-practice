@@ -1,92 +1,99 @@
 <?php
-  include_once './core/Database.php';
-  include_once './core/Password.php';
-  include_once './core/Controller.php';
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-  class AuthController extends Controller {
-    public function login() {
-      $view = new View("login");
-      $view->render([
-        'title' => AppName() . ' | Login'
-      ]);
-    }
+include_once BASEPATH . './core/Password.php';
+include_once BASEPATH . './model/UserModel.php';
+include_once BASEPATH . './controller/Controller.php';
 
-    public function handle_login() {
-      $user	= $_POST['username'];
-      $pass	= $_POST['password'];
-      
+class AuthController extends Controller {
+  /**
+   * Show the login page.
+   */
+  public function login() {
+    $view = new View("layout/auth");
+    $view->render([
+      'title' => AppName() . ' | Login',
+      'content' => $view->render_partial('page/login')
+    ]);
+  }
+
+  /**
+   * Handle the login process.
+   */
+  public function handle_login() {
+    $user	= $_POST['username'];
+    $pass	= $_POST['password'];
+    
+    $model = new UserModel();
+    $query_login = $model->find('', $user);
+
+    if (!$query_login) {
+      $_SESSION['msg'] = 1;
+      Route::redirect('login');
+    } else {
       $hash = new Password();
-      $database = new Database();
-      $database->connect();
 
-      $query_login = $database->query("select * from users where username = '$user'");
-
-      if ($query_login->num_rows > 0) {
-        while ($row = $query_login->fetch_assoc()) {
-          $database->close();
-
-          if (!$hash->check($pass, $row['password'])) {
-            $_SESSION['msg'] = 1;
-            Route::redirect('login');
-            exit;
-          }
-
-          $_SESSION['username'] = $row['username']; 
-          $_SESSION['password'] = $row['password'];
-          $_SESSION['role'] = $row['role'];
-          $_SESSION['auth'] = true;
-        }
-
-        Route::redirect('dashboard');
-      } else{
-        $database->close();
+      if (!$hash->verify($pass, $query_login['password'])) {
         $_SESSION['msg'] = 1;
         Route::redirect('login');
+        exit;
       }
-    }
 
-    public function register() {
-      $view = new View("register");
-      $view->render([
-        'title' => AppName() . ' | Register'
-      ]);
-    }
-
-    public function handle_register() {
-      $user	= $_POST['username'];
-      $pass	= $_POST['password'];
-      $pass_confirm	= $_POST['password_confirmation'];
+      $_SESSION['username'] = $query_login['username']; 
+      $_SESSION['password'] = $query_login['password'];
+      $_SESSION['role'] = $query_login['role'];
+      $_SESSION['auth'] = true;
       
-      if ($pass != $pass_confirm) {
-        $_SESSION['msg'] = 2;
-        Route::redirect('register');
-        exit;
-      }
+      Route::redirect('dashboard');
+    }
+  }
 
-      $hash = new Password();
-      $database = new Database();
-      $database->connect();
+  /**
+   * Show the register page.
+   */
+  public function register() {
+    $view = new View("layout/auth");
+    $view->render([
+      'title' => AppName() . ' | Register',
+      'content' => $view->render_partial('page/register')
+    ]);
+  }
 
-      $check_if_exist = $database->query("select * from users where username = '".$user."' limit 1");
-
-      if ($check_if_exist->num_rows > 0) {
-        $database->close();
-        $_SESSION['msg'] = 3;
-        Route::redirect('register');
-        exit;
-      }
-
-      $hashed_pass = $hash->hash($pass);
-      $database->query("insert into users (username, password, role) values ('".$user."', '".$hashed_pass."', 'user')");
-      $database->close();
-
-      Route::redirect('login');
+  /**
+   * Handle the register process.
+   */
+  public function handle_register() {
+    $user	= $_POST['username'];
+    $pass	= $_POST['password'];
+    $pass_confirm	= $_POST['password_confirmation'];
+    
+    if ($pass != $pass_confirm) {
+      $_SESSION['msg'] = 2;
+      Route::redirect('register');
+      exit;
     }
 
-    public function logout() {
-      session_start();
-      session_destroy();
+    $model = new UserModel();
+    $check_if_exist = $model->find('', $user);
+
+    if (!$check_if_exist) {
+      $_SESSION['msg'] = 3;
+      Route::redirect('register');
+    } else {
+      $hash = new Password();
+      $hashed_pass = $hash->make($pass);
+      $model->create($user, $hashed_pass, 'user');
+
       Route::redirect('login');
     }
   }
-?>
+
+  /**
+   * Handle the logout process.
+   */
+  public function logout() {
+    session_destroy();
+    session_start();
+    Route::redirect('login');
+  }
+}

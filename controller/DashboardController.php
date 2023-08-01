@@ -1,25 +1,29 @@
 <?php
-  include_once './core/Database.php';
-  include_once './core/Controller.php';
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-  class DashboardController extends Controller {
-    public function index() {
-      if (!isset($_SESSION['auth'])) {
-        Route::redirect('login');
-        exit;
-      }
+include_once BASEPATH . './model/UserModel.php';
+include_once BASEPATH . './controller/Controller.php';
 
-      $view = new View("dashboard");
-
-      $database = new Database();
-      $database->connect();
-
-      $query = $database->query("select * from users");
-
-      $view->render([
-        'title' => AppName() . ' | Dashboard',
-        'users' => $query
-      ]);
+class DashboardController extends Controller {
+  /**
+   * Show the dashboard page.
+   */
+  public function index() {
+    if (!isset($_SESSION['auth'])) {
+      Route::redirect('login');
+      exit;
     }
+
+    $model = new UserModel();
+    $query_user = $model->get();
+
+    $view = new View("layout/app");
+    $view->render([
+      'title' => AppName() . ' | Dashboard',
+      'navbar' => $view->render_partial('partial/navbar'),
+      'content' => $view->render_partial('page/dashboard', [
+        'users' => $query_user
+      ])
+    ]);
   }
-?>
+}
