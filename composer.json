@@ -11,18 +11,29 @@
     }
   ],
   "require": {
-    "php": "^7.4",
+    "php": "^8.2",
     "snake/framework": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5.10"
   },
   "autoload": {
     "psr-4": {
       "Bin\\": "bin/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Test\\": "test/"
+    }
+  },
   "scripts": {
+    "post-autoload-dump": [],
+    "post-update-cmd": [],
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-    ]
+    ],
+    "post-create-project-cmd": []
   },
   "config": {
     "optimize-autoloader": true,
@@ -30,6 +41,6 @@
     "sort-packages": true,
     "vendor-dir": "paddler"
   },
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "prefer-stable": true
 }
