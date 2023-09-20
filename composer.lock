@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14bc74f525727a20ceadc792015b0f16",
+    "content-hash": "91ba8377410630b017fa05ce89d32f5d",
     "packages": [
         {
             "name": "snake/framework",
@@ -39,6 +39,7 @@
                     "Snake\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
