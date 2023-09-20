@@ -29,7 +29,7 @@ return [
   |
   */
   'connections' => [
-    'mysql' => [
+    [
       'driver' => 'mysql',
       'host' => env('DB_HOST', 'localhost'),
       'name' => env('DB_NAME', 'snake'),
