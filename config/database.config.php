@@ -29,8 +29,24 @@ return [
   |
   */
   'connections' => [
-    [
-      'driver' => 'mysql',
+    'mysql' => [
+      'host' => env('DB_HOST', 'localhost'),
+      'name' => env('DB_NAME', 'snake'),
+      'username' => env('DB_USERNAME', 'root'),
+      'password' => env('DB_PASSWORD', '')
+    ],
+    'sqlite' => [
+      'name' => env('DB_NAME', 'snake'),
+      'username' => env('DB_USERNAME', 'root'),
+      'password' => env('DB_PASSWORD', '')
+    ],
+    'pgsql' => [
+      'host' => env('DB_HOST', 'localhost'),
+      'name' => env('DB_NAME', 'snake'),
+      'username' => env('DB_USERNAME', 'root'),
+      'password' => env('DB_PASSWORD', '')
+    ],
+    'sqlsrv' => [
       'host' => env('DB_HOST', 'localhost'),
       'name' => env('DB_NAME', 'snake'),
       'username' => env('DB_USERNAME', 'root'),
