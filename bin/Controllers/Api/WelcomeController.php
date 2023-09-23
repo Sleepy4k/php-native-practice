@@ -14,6 +14,8 @@ class WelcomeController extends Controller {
     static::response([
       'title' => config('bin', 'name'),
       'message' => 'Welcome to Snake Framework'
-    ]);
+    ], [
+      'X-Powered-By' => 'Snake Framework'
+    ], 201);
   }
 }
