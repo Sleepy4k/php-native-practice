@@ -2,8 +2,8 @@
 
 namespace Bin;
 
+use Bin\Providers\BinServiceProvider;
 use Bin\Providers\RouteServiceProvider;
-use Bin\Providers\SnakeServiceProvider;
 
 final class Kernel {
   /**
@@ -38,8 +38,8 @@ final class Kernel {
    */
   public function services(): array {
     return [
-      RouteServiceProvider::class,
-      SnakeServiceProvider::class
+      BinServiceProvider::class,
+      RouteServiceProvider::class
     ];
   }
 
