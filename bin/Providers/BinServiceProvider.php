@@ -4,7 +4,7 @@ namespace Bin\Providers;
 
 use Snake\Core\Facade\Provider;
 
-class SnakeServiceProvider extends Provider {
+class BinServiceProvider extends Provider {
   /**
    * Register the service provider
    *
@@ -20,6 +20,6 @@ class SnakeServiceProvider extends Provider {
    * @return void
    */
   public function booting(): void {
-    // 
+    //
   }
 }
