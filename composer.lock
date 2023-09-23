@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "snake/framework",
-            "version": "v1.0.3",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sleepy4k/php-sea-snake.git",
-                "reference": "4a068042b00f649387728e412ff9a8e2851e57c3"
+                "reference": "6fc13a9fa6cdfa7028711704431ad9bf64469f98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sleepy4k/php-sea-snake/zipball/4a068042b00f649387728e412ff9a8e2851e57c3",
-                "reference": "4a068042b00f649387728e412ff9a8e2851e57c3",
+                "url": "https://api.github.com/repos/Sleepy4k/php-sea-snake/zipball/6fc13a9fa6cdfa7028711704431ad9bf64469f98",
+                "reference": "6fc13a9fa6cdfa7028711704431ad9bf64469f98",
                 "shasum": ""
             },
             "require": {
@@ -34,7 +34,9 @@
                     "src/Helper/password.php",
                     "src/Helper/redirect.php",
                     "src/Helper/session.php",
-                    "src/Helper/url.php"
+                    "src/Helper/url.php",
+                    "src/Exception/ErrorHandler.php",
+                    "src/Exception/ExceptionHandler.php"
                 ],
                 "psr-4": {
                     "Snake\\": "src/"
@@ -61,7 +63,7 @@
                 "issues": "https://github.com/Sleepy4k/php-sea-snake-fw/issues",
                 "source": "https://github.com/Sleepy4k/php-sea-snake-fw/framework"
             },
-            "time": "2023-09-21T14:05:36+00:00"
+            "time": "2023-09-23T06:22:57+00:00"
         }
     ],
     "packages-dev": [
