@@ -23,6 +23,25 @@ class RouteServiceProvider extends Provider {
    */
   public function booting(): void {
     $this->app->singleton(Router::class);
-    Route::setRoute();
+    $this->routing();
+  }
+
+  /**
+   * Routing
+   *
+   * @return void
+   */
+  private function routing(): void {
+    Route::namespace('Bin\\Controllers\\Web')
+      ->group(function () {
+        require_once basepath() . '/route/web.php';
+      });
+
+    Route::namespace('Bin\\Controllers\\Api')
+      ->as('api.')
+      ->prefix('/api')
+      ->group(function () {
+        require_once basepath() . '/route/api.php';
+      });
   }
 }
